@@ -1,0 +1,46 @@
+{
+    "name": "nanqi/ethereum-php",
+    "type": "library",
+    "description": "ethereum eth web3 keysotre bip44 infura etherscan proxy api",
+    "keywords": [
+        "php",
+        "ethereum",
+        "web3",
+        "keysotre",
+        "bip44",
+        "infura",
+        "etherscan"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.2",
+        "sop/asn1": "^3.3",
+        "sop/crypto-encoding": "^0.2.0",
+        "sop/crypto-types": "^0.2.1",
+        "kornrunner/keccak": "^1.0",
+        "simplito/elliptic-php": "^1.0",
+        "minter/minter-php-bip-44": "^1.0",
+        "ext-gmp": "*",
+        "ext-openssl": "*",
+        "ext-json": "*",
+        "web3p/ethereum-tx": "^0.3.4",
+        "furqansiddiqui/bip39-mnemonic-php": "^0.1.2",
+        "guzzlehttp/guzzle": "~6.0",
+        "phpseclib/phpseclib": "~2.0",
+        "ext-bcmath": "*"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^7.5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ethereum\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test/"
+        }
+    }
+}
