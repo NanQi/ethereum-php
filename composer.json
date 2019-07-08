@@ -27,7 +27,7 @@
         "furqansiddiqui/bip39-mnemonic-php": "^0.1.2",
         "guzzlehttp/guzzle": "~6.0",
         "ext-bcmath": "*",
-        "nanqi/php-bip-44": "dev-master"
+        "nanqi/php-bip-44": "^1.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
