@@ -46,4 +46,14 @@ class ERC20Test extends BaseTestCase
 
         $this->assertTrue(true);
     }
+
+    public function testTransfer() {
+        $res = $this->getERC20()->transfer(
+            '',
+            '0xBe3eD451a5CfA78AcE6A77959FeE5f6D6D91Bb27',
+            1);
+        var_dump($res);
+
+        $this->assertTrue(true);
+    }
 }

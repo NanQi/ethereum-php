@@ -443,6 +443,40 @@ class Utils
         return $bnq->value . '.' . rtrim(sprintf("%0{$decimals}d", $bnr->value), '0');
     }
 
+    public static function toMinUnitByDecimals($number, int $decimals)
+    {
+        $bn = self::toBn($number);
+        $bnt = self::toBn(pow(10, $decimals));
+
+        if (is_array($bn)) {
+            // fraction number
+            list($whole, $fraction, $fractionLength, $negative1) = $bn;
+
+            $whole = $whole->multiply($bnt);
+
+            switch (MATH_BIGINTEGER_MODE) {
+                case $whole::MODE_GMP:
+                    static $two;
+                    $powerBase = gmp_pow(gmp_init(10), (int) $fractionLength);
+                    break;
+                case $whole::MODE_BCMATH:
+                    $powerBase = bcpow('10', (string) $fractionLength, 0);
+                    break;
+                default:
+                    $powerBase = pow(10, (int) $fractionLength);
+                    break;
+            }
+            $base = new BigInteger($powerBase);
+            $fraction = $fraction->multiply($bnt)->divide($base)[0];
+
+            if ($negative1 !== false) {
+                return $whole->add($fraction)->multiply($negative1);
+            }
+            return $whole->add($fraction);
+        }
+
+        return $bn->multiply($bnt);
+    }
 
     /**
      * 发送http请求
