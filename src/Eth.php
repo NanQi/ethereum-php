@@ -6,88 +6,59 @@
 namespace Ethereum;
 
 use GuzzleHttp\Client;
-use http\Exception\InvalidArgumentException;
+use Web3p\EthereumTx\Transaction;
 
 class Eth {
+    protected $proxyApi;
 
-    protected $apiKey;
-    protected $type;
-
-    function __construct(string $apiKey, string $type = 'etherscan') {
-        $this->apiKey = $apiKey;
-        $this->type = $type;
-    }
-
-    protected function _send(string $method, string $url, array $options = []) {
-        $client = new Client([ 'timeout'  => 30 ]);
-        $res = $client->request($method, $url, $options)->getBody();
-        $res = json_decode((string)$res, true);
-        return $res;
-    }
-
-    protected function getParams($params)
-    {
-        if ($this->type == 'infura') {
-            return [$params, 'latest'];
-        } else {
-            return $params;
-        }
-    }
-
-    public function send($method, $params = [])
-    {
-        if ($this->type == 'etherscan') {
-            $url = "https://api.etherscan.io/api?module=proxy&action={$method}&apikey={$this->apiKey}";
-            if ($params && count($params) > 0) {
-                $strParams = http_build_query($params);
-                $url .= "&{$strParams}";
-            }
-
-            $res = $this->_send('GET', $url);
-
-        } else if ($this->type == 'infura') {
-            $url = "https://mainnet.infura.io/v3/{$this->apiKey}";
-
-            $arr = array_map(function ($item) {
-                if (is_array($item)) {
-                    return json_encode($item);
-                } else {
-                    return '"' . $item . '"';
-                }
-            }, $params);
-            $strParams = implode(",", $arr);
-            $data_string = <<<data
-{"jsonrpc":"2.0","method":"{$method}","params": [$strParams],"id":1}
-data;
-            $res = $this->_send('POST', $url, [
-                'body' => $data_string
-            ]);
-        } else {
-            throw new \InvalidArgumentException('type invalid');
-        }
-
-        if (isset($res['result'])) {
-            return $res['result'];
-        } else {
-            return false;
-        }
+    function __construct(ProxyApi $proxyApi) {
+        $this->proxyApi = $proxyApi;
     }
 
     public function gasPrice()
     {
-        return $this->send('eth_gasPrice');
+        return $this->proxyApi->gasPrice();
     }
 
-    public static function gasPriceOracle($type = null)
+    public function ethBalance(string $address)
     {
-        $client = new Client([ 'timeout'  => 10 ]);
+        return $this->proxyApi->ethBalance($address);
+    }
+
+    public function receiptStatus(string $txHash)
+    {
+        return $this->proxyApi->receiptStatus($txHash);
+    }
+
+    public static function gasPriceOracle($type = 'standard')
+    {
         $url = 'https://www.etherchain.org/api/gasPriceOracle';
-        $res = $client->request('GET', $url)->getBody();
-        $res = json_decode((string)$res, true);
+        $res = Utils::httpRequest('GET', $url);
         if ($type && isset($res[$type])) {
-            return Utils::toWei($res[$type], 'gwei');
+            return Utils::toHex(Utils::toWei($res[$type], 'gwei'));
         } else {
             return $res;
         }
+    }
+
+    public function transfer(string $privateKey, string $to, float $value)
+    {
+        $from = PEMHelper::privateKeyToAddress($privateKey);
+        $nonce = $this->proxyApi->getNonce($from);
+        $gasPrice = self::gasPriceOracle();
+        $eth = Utils::toWei("$value", 'ether');
+
+        $transaction = new Transaction([
+            'nonce' => "0x$nonce",
+            'from' => $from,
+            'to' => $to,
+            'gas' => '0x76c0',
+            'gasPrice' => "0x$gasPrice",
+            'value' => $eth,
+            'chainId' => 1,
+        ]);
+
+        $raw = $transaction->sign($privateKey);
+        return $this->proxyApi->sendRawTransaction('0x'.$raw);
     }
 }

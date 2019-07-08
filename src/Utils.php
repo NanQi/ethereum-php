@@ -6,6 +6,7 @@
 
 namespace Ethereum;
 
+use GuzzleHttp\Client;
 use InvalidArgumentException;
 use kornrunner\Keccak;
 use phpseclib\Math\BigInteger;
@@ -431,13 +432,30 @@ class Utils
     public static function toDisplayAmount($number, int $decimals)
     {
         $bn = self::toBn($number);
-        $res = $bn->divide(self::toBn(pow(10, $decimals)));
-        if (count($res) != 2) {
-            throw new \RuntimeException('divide error');
-        }
+        $bnt = self::toBn(pow(10, $decimals));
 
-        return $res[0]->value . '.' . $res[1]->value;
+        return self::divideDisplay($bn->divide($bnt), $decimals);
+    }
+
+    public static function divideDisplay(array $divResult, int $decimals)
+    {
+        list($bnq, $bnr) = $divResult;
+        return $bnq->value . '.' . rtrim(sprintf("%0{$decimals}d", $bnr->value), '0');
     }
 
 
+    /**
+     * 发送http请求
+     * @param string $method
+     * @param string $url
+     * @param array $options
+     * @return mixed|\Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function httpRequest(string $method, string $url, array $options = []) {
+        $client = new Client([ 'timeout'  => 30 ]);
+        $res = $client->request($method, $url, $options)->getBody();
+        $res = json_decode((string)$res, true);
+        return $res;
+    }
 }

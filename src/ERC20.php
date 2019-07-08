@@ -12,29 +12,33 @@ class ERC20 extends Eth{
 
     protected $contractAddress;
 
-    function __construct(string $contractAddress, string $apiKey, string $type = 'etherscan') {
-        parent::__construct($apiKey, $type);
+    function __construct(string $contractAddress, ProxyApi $proxyApi) {
+        parent::__construct($proxyApi);
 
         $this->contractAddress = $contractAddress;
     }
 
     public function balanceByApi(string $address, int $decimals)
     {
-        if ($this->type == 'etherscan') {
-            $url = "https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress={$this->contractAddress}&address={$address}&tag=latest&apikey={$this->apiKey}";
-            $res = $this->_send('GET', $url);
+        if ($this->proxyApi instanceof EtherscanApi) {
+            $res = $this->proxyApi->send('tokenbalance', [
+                'module' => 'account',
+                'contractaddress' => $this->contractAddress,
+                'address' => $address
+            ]);
+
+            if ($res !== false) {
+                return Utils::toDisplayAmount($res, $decimals);
+            } else {
+                return false;
+            }
         } else {
             throw new \InvalidArgumentException('type invalid');
         }
 
-        if (isset($res['result'])) {
-            return Utils::toDisplayAmount($res['result'], $decimals);
-        } else {
-            return false;
-        }
     }
 
-    public function balance(string $address, int $decimals)
+    public function balance(string $address, int $decimals = 16)
     {
         $params = [];
         $params['to'] = $this->contractAddress;
@@ -45,7 +49,7 @@ class ERC20 extends Eth{
 
         $params['data'] = "0x{$signMethod}{$signAddress}";
 
-        $balance = $this->send('eth_call', $this->getParams($params));
+        $balance = $this->proxyApi->send('eth_call', $params);
         return Utils::toDisplayAmount($balance, $decimals);
     }
 }

@@ -6,6 +6,7 @@
 
 namespace Ethereum;
 
+use kornrunner\Keccak;
 use Sop\CryptoTypes\Asymmetric\EC\ECPrivateKey;
 use Sop\CryptoEncoding\PEM;
 
@@ -70,7 +71,7 @@ class PEMHelper
         if (strlen($publicKey) !== 130) {
             throw new InvalidArgumentException('Invalid public key length.');
         }
-        return '0x' . substr(Utils::sha3(substr(hex2bin($publicKey), 1)), 24);
+        return '0x' . substr(self::sha3(substr(hex2bin($publicKey), 1)), 24);
     }
 
     /**
@@ -110,5 +111,24 @@ class PEMHelper
         $publicKey = $privateKey->getPublic(false, 'hex');
 
         return '0x' . $publicKey;
+    }
+
+    /**
+     * Get sha3
+     * keccak256
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public static function sha3(string $value)
+    {
+        $hash = Keccak::hash($value, 256);
+        // null sha
+        $null = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+        if ($hash === $null) {
+            return null;
+        }
+        return $hash;
     }
 }

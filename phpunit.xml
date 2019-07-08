@@ -8,7 +8,7 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
-    <testsuite name="PHP Ethereum Tools Test Suite">
+    <testsuite name="PHP Ethereum Test Suite">
         <directory suffix="Test.php">./tests</directory>
     </testsuite>
     <filter>
