@@ -53,13 +53,28 @@ class EtherscanApi implements ProxyApi {
         return Utils::fromWei($this->send('balance', $params), 'ether');
     }
 
-    function receiptStatus(string $txHash): bool
+    function receiptStatus(string $txHash): ?bool
     {
+        $res = $this->send('eth_getTransactionByHash', ['txhash' => $txHash]);
+        if (!$res) {
+            return false;
+        }
+
+        if (!$res['blockNumber']) {
+            return null;
+        }
+
         $params['module'] = 'transaction';
         $params['txhash'] = $txHash;
 
         $res =  $this->send('gettxreceiptstatus', $params);
         return $res['status'] == '1';
+    }
+
+    function getTransactionReceipt(string $txHash)
+    {
+        $res = $this->send('eth_getTransactionReceipt', ['txhash' => $txHash]);
+        var_dump($res);
     }
 
     function sendRawTransaction($raw)

@@ -9,7 +9,7 @@ namespace Ethereum;
 use Hamcrest\Util;
 use Web3p\EthereumTx\Transaction;
 
-class ERC20 extends Eth{
+class ERC20 extends Eth {
 
     protected $contractAddress;
 

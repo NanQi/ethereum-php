@@ -14,7 +14,6 @@ namespace Tests;
 
 
 use BIP\BIP44;
-use Ethereum\Utils2;
 use Ethereum\Wallet;
 use Ethereum\PEMHelper;
 use FurqanSiddiqui\BIP39\BIP39;

@@ -30,6 +30,11 @@ class Eth {
         return $this->proxyApi->receiptStatus($txHash);
     }
 
+    public function getTransactionReceipt(string $txHash)
+    {
+        return $this->proxyApi->getTransactionReceipt($txHash);
+    }
+
     public static function gasPriceOracle($type = 'standard')
     {
         $url = 'https://www.etherchain.org/api/gasPriceOracle';

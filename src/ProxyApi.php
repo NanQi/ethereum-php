@@ -5,6 +5,8 @@
  */
 namespace Ethereum;
 
+use phpDocumentor\Reflection\Types\Nullable;
+
 interface ProxyApi {
     function send($method, $params = []);
 
@@ -12,7 +14,9 @@ interface ProxyApi {
 
     function ethBalance(string $address);
 
-    function receiptStatus(string $txHash) : bool;
+    function receiptStatus(string $txHash) : ?bool;
+
+    function getTransactionReceipt(string $txHash);
 
     function sendRawTransaction($raw);
 
