@@ -74,7 +74,7 @@ class EtherscanApi implements ProxyApi {
     function getTransactionReceipt(string $txHash)
     {
         $res = $this->send('eth_getTransactionReceipt', ['txhash' => $txHash]);
-        var_dump($res);
+        return $res;
     }
 
     function sendRawTransaction($raw)

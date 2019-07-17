@@ -7,9 +7,11 @@
 namespace Ethereum;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use kornrunner\Keccak;
 use phpseclib\Math\BigInteger;
+use Psr\Http\Message\StreamInterface;
 
 class Utils
 {
@@ -251,7 +253,7 @@ class Utils
      *
      * @param BigInteger|string $number
      * @param string $unit
-     * @return \phpseclib\Math\BigInteger
+     * @return BigInteger
      */
     public static function toWei($number, $unit)
     {
@@ -339,7 +341,7 @@ class Utils
      *
      * @param BigInteger|string|int $number
      * @param string $unit
-     * @return \phpseclib\Math\BigInteger
+     * @return BigInteger
      */
     public static function fromWei($number, $unit)
     {
@@ -361,7 +363,7 @@ class Utils
      * Change number or number string to BigInteger.
      *
      * @param BigInteger|string|int $number
-     * @return array|\phpseclib\Math\BigInteger
+     * @return array|BigInteger
      */
     public static function toBn($number)
     {
@@ -483,8 +485,8 @@ class Utils
      * @param string $method
      * @param string $url
      * @param array $options
-     * @return mixed|\Psr\Http\Message\StreamInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return mixed|StreamInterface
+     * @throws GuzzleException
      */
     public static function httpRequest(string $method, string $url, array $options = []) {
         $client = new Client([ 'timeout'  => 30 ]);

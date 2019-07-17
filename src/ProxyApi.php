@@ -5,8 +5,6 @@
  */
 namespace Ethereum;
 
-use phpDocumentor\Reflection\Types\Nullable;
-
 interface ProxyApi {
     function send($method, $params = []);
 

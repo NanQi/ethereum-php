@@ -58,7 +58,7 @@ class EthTest extends BaseTestCase
     {
 //        $isSuccess = $this->getEth()->receiptStatus(self::SUCCESS_TX_HASH);
 //        $isFail = $this->getEth()->receiptStatus(self::FAIL_TX_HASH);
-        $pending = $this->getEth()->receiptStatus('0xf0fcb14707c0eca8a62551ddb1150ff9983f0a3506123714d1266ba354f2d896');
+        $pending = $this->getEth()->receiptStatus('0x3f81e83a0e9d0329c08b976b0585208d6fd90b7a1946e933b9731510025ccdf4');
         var_dump($pending);
 //        $pending = $this->getEth()->receiptStatus('0x1f29451d8e68ceb8bcf9c7a568ee2449c87bceaf0b1ab583cf0cbd17d1a1639b ');
 //        var_dump($pending);
@@ -70,8 +70,8 @@ class EthTest extends BaseTestCase
     public function testGetTransactionReceipt()
     {
 //        $isSuccess = $this->getEth()->receiptStatus(self::SUCCESS_TX_HASH);
-//        $isFail = $this->getEth()->receiptStatus(self::FAIL_TX_HASH);
-        $pending = $this->getEth()->getTransactionReceipt('0xf0fcb14707c0eca8a62551ddb1150ff9983f0a3506123714d1266ba354f2d896');
+//        $isFail = $this->getEth()->getTransactionReceipt(self::FAIL_TX_HASH);
+        $pending = $this->getEth()->getTransactionReceipt('0x3f81e83a0e9d0329c08b976b0585208d6fd90b7a1946e933b9731510025ccdf4');
         var_dump($pending);
 //        $pending = $this->getEth()->getTransactionReceipt('0x1f29451d8e68ceb8bcf9c7a568ee2449c87bceaf0b1ab583cf0cbd17d1a1639b ');
 //        var_dump($pending);
@@ -84,7 +84,7 @@ class EthTest extends BaseTestCase
         $res = $this->getEth()->transfer(
             '',
             '0xBe3eD451a5CfA78AcE6A77959FeE5f6D6D91Bb27',
-            0.0001);
+            0.0001, 'fast');
         var_dump($res);
 
         $this->assertTrue(true);

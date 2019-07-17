@@ -8,6 +8,8 @@ namespace Ethereum;
 
 use BIP\BIP44;
 use FurqanSiddiqui\BIP39\BIP39;
+use FurqanSiddiqui\BIP39\Exception\MnemonicException;
+use FurqanSiddiqui\BIP39\Exception\WordListException;
 
 class Wallet {
     const DEFAULT_PATH = "m/44'/60'/0'/0/0";
@@ -32,8 +34,8 @@ class Wallet {
      * @param string $passphrase 密码
      * @param string $path BIP44路径
      * @return array
-     * @throws \FurqanSiddiqui\BIP39\Exception\MnemonicException
-     * @throws \FurqanSiddiqui\BIP39\Exception\WordListException
+     * @throws MnemonicException
+     * @throws WordListException
      */
     public static function newAccountByMnemonic(string $passphrase = '', string $path = self::DEFAULT_PATH) : array
     {
@@ -56,8 +58,8 @@ class Wallet {
      * @param string $passphrase 密码
      * @param string $path BIP44路径
      * @return array
-     * @throws \FurqanSiddiqui\BIP39\Exception\MnemonicException
-     * @throws \FurqanSiddiqui\BIP39\Exception\WordListException
+     * @throws MnemonicException
+     * @throws WordListException
      */
     public static function revertAccountByMnemonic(string $mnemonic, string $passphrase = '', string $path = self::DEFAULT_PATH) : array
     {

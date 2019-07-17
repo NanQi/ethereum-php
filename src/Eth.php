@@ -5,7 +5,6 @@
  */
 namespace Ethereum;
 
-use GuzzleHttp\Client;
 use Web3p\EthereumTx\Transaction;
 
 class Eth {
@@ -46,20 +45,24 @@ class Eth {
         }
     }
 
-    public function transfer(string $privateKey, string $to, float $value)
+    public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard')
     {
         $from = PEMHelper::privateKeyToAddress($privateKey);
         $nonce = $this->proxyApi->getNonce($from);
-        $gasPrice = self::gasPriceOracle();
+        if (!Utils::isHex($gasPrice)) {
+            $gasPrice = Utils::toHex(self::gasPriceOracle($gasPrice), true);
+        }
+
         $eth = Utils::toWei("$value", 'ether');
+        $eth = Utils::toHex($eth, true);
 
         $transaction = new Transaction([
-            'nonce' => "0x$nonce",
+            'nonce' => "$nonce",
             'from' => $from,
             'to' => $to,
             'gas' => '0x76c0',
-            'gasPrice' => "0x$gasPrice",
-            'value' => $eth,
+            'gasPrice' => "$gasPrice",
+            'value' => "$eth",
             'chainId' => 1,
         ]);
 

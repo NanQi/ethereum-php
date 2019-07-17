@@ -6,7 +6,7 @@
 
 namespace Ethereum;
 
-use Hamcrest\Util;
+use InvalidArgumentException;
 use Web3p\EthereumTx\Transaction;
 
 class ERC20 extends Eth {
@@ -34,7 +34,7 @@ class ERC20 extends Eth {
                 return false;
             }
         } else {
-            throw new \InvalidArgumentException('type invalid');
+            throw new InvalidArgumentException('type invalid');
         }
 
     }
@@ -54,19 +54,20 @@ class ERC20 extends Eth {
         return Utils::toDisplayAmount($balance, $decimals);
     }
 
-    public function transfer(string $privateKey, string $to, float $value)
+    public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard')
     {
         $from = PEMHelper::privateKeyToAddress($privateKey);
         $nonce = $this->proxyApi->getNonce($from);
-        $gasPrice = self::gasPriceOracle();
-
+        if (!Utils::isHex($gasPrice)) {
+            $gasPrice = Utils::toHex(self::gasPriceOracle($gasPrice), true);
+        }
         $params = [
-            'nonce' => "0x$nonce",
+            'nonce' => "$nonce",
             'from' => $from,
             'to' => $this->contractAddress,
             'gas' => '0x15F90',
-            'gasPrice' => "0x$gasPrice",
-            'value' => '0x0',
+            'gasPrice' => "$gasPrice",
+            'value' => Utils::NONE,
             'chainId' => 1,
         ];
         $val = Utils::toMinUnitByDecimals("$value", 8);
