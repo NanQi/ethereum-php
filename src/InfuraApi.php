@@ -64,4 +64,9 @@ data;
     {
         // TODO: Implement getNonce() method.
     }
+
+    function getTransactionReceipt(string $txHash)
+    {
+        // TODO: Implement getTransactionReceipt() method.
+    }
 }

@@ -7,6 +7,12 @@ namespace Ethereum;
 
 use Web3p\EthereumTx\Transaction;
 
+/**
+ * @method bool|null receiptStatus(string $txHash)
+ * @method mixed gasPrice()
+ * @method mixed ethBalance(string $address)
+ * @method mixed getTransactionReceipt(string $txHash)
+ */
 class Eth {
     protected $proxyApi;
 
@@ -14,24 +20,9 @@ class Eth {
         $this->proxyApi = $proxyApi;
     }
 
-    public function gasPrice()
+    function __call($name, $arguments)
     {
-        return $this->proxyApi->gasPrice();
-    }
-
-    public function ethBalance(string $address)
-    {
-        return $this->proxyApi->ethBalance($address);
-    }
-
-    public function receiptStatus(string $txHash)
-    {
-        return $this->proxyApi->receiptStatus($txHash);
-    }
-
-    public function getTransactionReceipt(string $txHash)
-    {
-        return $this->proxyApi->getTransactionReceipt($txHash);
+        return call_user_func_array([$this->proxyApi, $name], $arguments);
     }
 
     public static function gasPriceOracle($type = 'standard')

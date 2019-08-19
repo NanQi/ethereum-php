@@ -24,7 +24,6 @@ class WalletTest extends BaseTestCase
     function testGenerateANewEthereumPrivateKey()
     {
         $privateKey = PEMHelper::generateNewPrivateKey();
-        $privateKey = '0x6f37bcbcbeb864c546b4cfaad1c7d8ffc7a08277c08ffcafda13543f156fbb4f';
         $publicKey = PEMHelper::privateKeyToPublicKey($privateKey);
         $addressFromPrivate = PEMHelper::privateKeyToAddress($privateKey);
 

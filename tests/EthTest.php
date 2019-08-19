@@ -62,6 +62,7 @@ class EthTest extends BaseTestCase
         var_dump($pending);
 //        $pending = $this->getEth()->receiptStatus('0x1f29451d8e68ceb8bcf9c7a568ee2449c87bceaf0b1ab583cf0cbd17d1a1639b ');
 //        var_dump($pending);
+        $this->assertTrue(true);
 
 //        $this->assertTrue(!$isFail);
 //        $this->assertTrue($isSuccess);
@@ -75,6 +76,7 @@ class EthTest extends BaseTestCase
         var_dump($pending);
 //        $pending = $this->getEth()->getTransactionReceipt('0x1f29451d8e68ceb8bcf9c7a568ee2449c87bceaf0b1ab583cf0cbd17d1a1639b ');
 //        var_dump($pending);
+        $this->assertTrue(true);
 
 //        $this->assertTrue(!$isFail);
 //        $this->assertTrue($isSuccess);
