@@ -7,9 +7,11 @@ namespace Ethereum;
 
 class EtherscanApi implements ProxyApi {
     protected $apiKey;
+    protected $type;
 
-    function __construct(string $apiKey) {
+    function __construct(string $apiKey, $type = 'mainnet') {
         $this->apiKey = $apiKey;
+        $this->type = $type;
     }
 
     public function send($method, $params = [])
@@ -25,7 +27,12 @@ class EtherscanApi implements ProxyApi {
             }
         }
 
-        $url = "https://api.etherscan.io/api?action={$method}&apikey={$this->apiKey}";
+        $preApi = 'api';
+        if ($this->type != 'mainnet') {
+            $preApi .= '-' . $this->type;
+        }
+
+        $url = "https://$preApi.etherscan.io/api?action={$method}&apikey={$this->apiKey}";
         if ($params && count($params) > 0) {
             $strParams = http_build_query($params);
             $url .= "&{$strParams}";
