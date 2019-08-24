@@ -69,4 +69,9 @@ data;
     {
         // TODO: Implement getTransactionReceipt() method.
     }
+
+    function getNetwork(): string
+    {
+        // TODO: Implement getNetwork() method.
+    }
 }

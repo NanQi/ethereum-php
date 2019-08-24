@@ -30,10 +30,33 @@ class Eth {
         $url = 'https://www.etherchain.org/api/gasPriceOracle';
         $res = Utils::httpRequest('GET', $url);
         if ($type && isset($res[$type])) {
-            return Utils::toHex(Utils::toWei($res[$type], 'gwei'));
+            $price = $res[$type];
+            $price = Utils::toWei($price, 'gwei');
+//            $price = $price * 1e9;
+            return $price;
         } else {
             return $res;
         }
+    }
+
+    protected function getChainId() : int {
+        $network = $this->proxyApi->getNetwork();
+        $chainId = 1;
+        switch ($network) {
+            case 'rinkeby':
+                $chainId = 4;
+                break;
+            case 'ropsten':
+                $chainId = 3;
+                break;
+            case 'kovan':
+                $chainId = 42;
+                break;
+            default:
+                break;
+        }
+
+        return $chainId;
     }
 
     public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard')
@@ -45,6 +68,7 @@ class Eth {
         }
 
         $eth = Utils::toWei("$value", 'ether');
+//        $eth = $value * 1e16;
         $eth = Utils::toHex($eth, true);
 
         $transaction = new Transaction([
@@ -54,7 +78,7 @@ class Eth {
             'gas' => '0x76c0',
             'gasPrice' => "$gasPrice",
             'value' => "$eth",
-            'chainId' => 1,
+            'chainId' => $this->getChainId(),
         ]);
 
         $raw = $transaction->sign($privateKey);

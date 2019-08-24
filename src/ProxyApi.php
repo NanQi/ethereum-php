@@ -6,6 +6,9 @@
 namespace Ethereum;
 
 interface ProxyApi {
+
+    function getNetwork() : string;
+
     function send($method, $params = []);
 
     function gasPrice();

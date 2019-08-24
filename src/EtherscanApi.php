@@ -7,11 +7,11 @@ namespace Ethereum;
 
 class EtherscanApi implements ProxyApi {
     protected $apiKey;
-    protected $type;
+    protected $network;
 
-    function __construct(string $apiKey, $type = 'mainnet') {
+    function __construct(string $apiKey, $network = 'mainnet') {
         $this->apiKey = $apiKey;
-        $this->type = $type;
+        $this->network = $network;
     }
 
     public function send($method, $params = [])
@@ -28,8 +28,8 @@ class EtherscanApi implements ProxyApi {
         }
 
         $preApi = 'api';
-        if ($this->type != 'mainnet') {
-            $preApi .= '-' . $this->type;
+        if ($this->network != 'mainnet') {
+            $preApi .= '-' . $this->network;
         }
 
         $url = "https://$preApi.etherscan.io/api?action={$method}&apikey={$this->apiKey}";
@@ -57,7 +57,12 @@ class EtherscanApi implements ProxyApi {
         $params['module'] = 'account';
         $params['address'] = $address;
 
-        return Utils::fromWei($this->send('balance', $params), 'ether');
+        $retDiv = Utils::fromWei($this->send('balance', $params), 'ether');
+        if (is_array($retDiv)) {
+            return Utils::divideDisplay($retDiv, 16);
+        } else {
+            return $retDiv;
+        }
     }
 
     function receiptStatus(string $txHash): ?bool
@@ -92,5 +97,10 @@ class EtherscanApi implements ProxyApi {
     function getNonce(string $address)
     {
         return $this->send('eth_getTransactionCount', ['address' => $address]);
+    }
+
+    function getNetwork(): string
+    {
+        return $this->network;
     }
 }

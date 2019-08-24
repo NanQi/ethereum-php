@@ -442,7 +442,12 @@ class Utils
     public static function divideDisplay(array $divResult, int $decimals)
     {
         list($bnq, $bnr) = $divResult;
-        return $bnq->value . '.' . rtrim(sprintf("%0{$decimals}d", $bnr->value), '0');
+        $ret = "$bnq->value";
+        if ($bnr->value > 0) {
+            $ret .= '.' . rtrim(sprintf("%0{$decimals}d", $bnr->value), '0');
+        }
+
+        return $ret;
     }
 
     public static function toMinUnitByDecimals($number, int $decimals)
