@@ -5,6 +5,7 @@
  */
 namespace Ethereum;
 
+use League\Event\EmitterTrait;
 use Web3p\EthereumTx\Transaction;
 
 /**
@@ -14,6 +15,8 @@ use Web3p\EthereumTx\Transaction;
  * @method mixed getTransactionReceipt(string $txHash)
  */
 class Eth {
+    use EmitterTrait;
+
     protected $proxyApi;
 
     function __construct(ProxyApi $proxyApi) {
@@ -39,7 +42,7 @@ class Eth {
         }
     }
 
-    protected function getChainId() : int {
+    public function getChainId() : int {
         $network = $this->proxyApi->getNetwork();
         $chainId = 1;
         switch ($network) {
@@ -82,6 +85,11 @@ class Eth {
         ]);
 
         $raw = $transaction->sign($privateKey);
-        return $this->proxyApi->sendRawTransaction('0x'.$raw);
+        $res = $this->proxyApi->sendRawTransaction('0x'.$raw);
+        if ($res !== false) {
+            $this->emit(new TransactionEvent($transaction, $privateKey));
+        }
+
+        return $res;
     }
 }

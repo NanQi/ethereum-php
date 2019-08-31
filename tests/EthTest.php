@@ -15,6 +15,7 @@ namespace Tests;
 
 use Ethereum\Eth;
 use Ethereum\EtherscanApi;
+use Ethereum\TransactionEvent;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class EthTest extends BaseTestCase
@@ -82,7 +83,12 @@ class EthTest extends BaseTestCase
     }
 
     public function testTransfer() {
-        $res = $this->getEth()->transfer(
+        $eth = $this->getEth();
+        $eth->addListener(TransactionEvent::class, function($event) {
+
+        });
+
+        $res = $eth->transfer(
             self::WALLET_PRIVATE_KEY,
             '0x04d5b5a2fc54fc7336856ed55a56b0f20d5b9e54',
             0.0005, 'fast');
