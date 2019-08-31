@@ -83,7 +83,7 @@ class ERC20 extends Eth {
         $raw = $transaction->sign($privateKey);
         $res = $this->proxyApi->sendRawTransaction('0x'.$raw);
         if ($res !== false) {
-            $this->emit(new TransactionEvent($transaction, $privateKey));
+            $this->emit(new TransactionEvent($transaction, $privateKey, $res));
         }
 
         return $res;

@@ -10,9 +10,10 @@ use Web3p\EthereumTx\Transaction;
  */
 
 class TransactionEvent extends AbstractEvent {
-    public function __construct(Transaction $transaction, string $privateKey)
+    public function __construct(Transaction $transaction, string $privateKey, string $txHash)
     {
         $this->transaction = $transaction;
         $this->privateKey = $privateKey;
+        $this->txHash = $txHash;
     }
 }
