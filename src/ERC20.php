@@ -68,7 +68,7 @@ class ERC20 extends Eth {
             'gas' => '0x15F90',
             'gasPrice' => "$gasPrice",
             'value' => Utils::NONE,
-            'chainId' => $this->getChainId(),
+            'chainId' => self::getChainId($this->proxyApi->getNetwork()),
         ];
         $val = Utils::toMinUnitByDecimals("$value", 8);
 

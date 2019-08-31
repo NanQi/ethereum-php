@@ -42,8 +42,7 @@ class Eth {
         }
     }
 
-    public function getChainId() : int {
-        $network = $this->proxyApi->getNetwork();
+    public static function getChainId($network) : int {
         $chainId = 1;
         switch ($network) {
             case 'rinkeby':
@@ -81,7 +80,7 @@ class Eth {
             'gas' => '0x76c0',
             'gasPrice' => "$gasPrice",
             'value' => "$eth",
-            'chainId' => $this->getChainId(),
+            'chainId' => self::getChainId($this->proxyApi->getNetwork()),
         ]);
 
         $raw = $transaction->sign($privateKey);
