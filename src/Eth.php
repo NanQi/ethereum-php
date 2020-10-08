@@ -33,8 +33,7 @@ class Eth {
         $url = 'https://www.etherchain.org/api/gasPriceOracle';
         $res = Utils::httpRequest('GET', $url);
         if ($type && isset($res[$type])) {
-            $price = $res[$type];
-            $price = Utils::toWei($price, 'gwei');
+            $price = Utils::toWei((string)$res[$type], 'gwei');
 //            $price = $price * 1e9;
             return $price;
         } else {
