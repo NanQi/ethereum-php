@@ -22,4 +22,6 @@ interface ProxyApi {
     function sendRawTransaction($raw);
 
     function getNonce(string $address);
+
+    function ethCall($params);
 }

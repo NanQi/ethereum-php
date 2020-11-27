@@ -1,22 +1,25 @@
 <?php
+
 /**
  * author: NanQi
  * datetime: 2019/7/3 17:53
  */
+
 namespace Ethereum;
 
-class InfuraApi implements ProxyApi {
+class InfuraApi implements ProxyApi
+{
     protected $apiKey;
 
-    function __construct(string $apiKey) {
+    function __construct(string $apiKey, string $network = 'mainnet')
+    {
         $this->apiKey = $apiKey;
+        $this->network = $network;
     }
 
     public function send($method, $params = [])
     {
         $url = "https://mainnet.infura.io/v3/{$this->apiKey}";
-
-        $params[] = 'latest';
 
         $arr = array_map(function ($item) {
             if (is_array($item)) {
@@ -45,9 +48,10 @@ data;
         return $this->send('eth_gasPrice');
     }
 
-    function ethBalance(string $address)
+    function ethBalance(string $address, int $decimals = 16)
     {
-        // TODO: Implement balance() method.
+        $balance = $this->send('eth_getBalance', ['address' => $address, 'latest']);
+        return Utils::toDisplayAmount($balance, $decimals);
     }
 
     function receiptStatus(string $txHash): bool
@@ -57,12 +61,12 @@ data;
 
     function sendRawTransaction($raw)
     {
-        // TODO: Implement sendRawTransaction() method.
+        return $this->send('eth_sendRawTransaction', ['hex' => $raw]);
     }
 
     function getNonce(string $address)
     {
-        // TODO: Implement getNonce() method.
+        return $this->send('eth_getTransactionCount', ['address' => $address, 'latest']);
     }
 
     function getTransactionReceipt(string $txHash)
@@ -72,6 +76,11 @@ data;
 
     function getNetwork(): string
     {
-        // TODO: Implement getNetwork() method.
+        return $this->network;
+    }
+
+    function ethCall($params): string
+    {
+        return $this->send('eth_call', ['params' => $params, 'latest']);
     }
 }

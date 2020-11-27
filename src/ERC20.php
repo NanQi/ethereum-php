@@ -9,11 +9,13 @@ namespace Ethereum;
 use InvalidArgumentException;
 use Web3p\EthereumTx\Transaction;
 
-class ERC20 extends Eth {
+class ERC20 extends Eth
+{
 
     protected $contractAddress;
 
-    function __construct(string $contractAddress, ProxyApi $proxyApi) {
+    function __construct(string $contractAddress, ProxyApi $proxyApi)
+    {
         parent::__construct($proxyApi);
 
         $this->contractAddress = $contractAddress;
@@ -36,7 +38,7 @@ class ERC20 extends Eth {
         } else {
             throw new InvalidArgumentException('type invalid');
         }
-
+        
     }
 
     public function balance(string $address, int $decimals = 16)
@@ -50,11 +52,11 @@ class ERC20 extends Eth {
 
         $params['data'] = "0x{$formatMethod}{$formatAddress}";
 
-        $balance = $this->proxyApi->send('eth_call', $params);
+        $balance = $this->proxyApi->ethCall($params);
         return Utils::toDisplayAmount($balance, $decimals);
     }
 
-    public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard')
+    public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard', int $decimals = 16)
     {
         $from = PEMHelper::privateKeyToAddress($privateKey);
         $nonce = $this->proxyApi->getNonce($from);
@@ -70,7 +72,7 @@ class ERC20 extends Eth {
             'value' => Utils::NONE,
             'chainId' => self::getChainId($this->proxyApi->getNetwork()),
         ];
-        $val = Utils::toMinUnitByDecimals("$value", 8);
+        $val = Utils::toMinUnitByDecimals("$value", $decimals);
 
         $method = 'transfer(address,uint256)';
         $formatMethod = Formatter::toMethodFormat($method);
