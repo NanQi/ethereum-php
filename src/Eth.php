@@ -14,12 +14,14 @@ use Web3p\EthereumTx\Transaction;
  * @method mixed ethBalance(string $address)
  * @method mixed getTransactionReceipt(string $txHash)
  */
-class Eth {
+class Eth
+{
     use EmitterTrait;
 
     protected $proxyApi;
 
-    function __construct(ProxyApi $proxyApi) {
+    function __construct(ProxyApi $proxyApi)
+    {
         $this->proxyApi = $proxyApi;
     }
 
@@ -28,13 +30,14 @@ class Eth {
         return call_user_func_array([$this->proxyApi, $name], $arguments);
     }
 
+    // type:[safeLow|standard|fast|fastest]
     public static function gasPriceOracle($type = 'standard')
     {
         $url = 'https://www.etherchain.org/api/gasPriceOracle';
         $res = Utils::httpRequest('GET', $url);
         if ($type && isset($res[$type])) {
             $price = Utils::toWei((string)$res[$type], 'gwei');
-//            $price = $price * 1e9;
+            //            $price = $price * 1e9;
             return $price;
         } else {
             return $res;
@@ -69,7 +72,7 @@ class Eth {
         }
 
         $eth = Utils::toWei("$value", 'ether');
-//        $eth = $value * 1e16;
+        //        $eth = $value * 1e16;
         $eth = Utils::toHex($eth, true);
 
         $transaction = new Transaction([
