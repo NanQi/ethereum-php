@@ -108,4 +108,14 @@ class EtherscanApi implements ProxyApi {
     {
         // TODO: Implement ethCall() method.
     }
+
+    function blockNumber()
+    {
+        // TODO: Implement blockNumber() method.
+    }
+
+    function getBlockByNumber(int $blockNumber)
+    {
+        // TODO: Implement getBlockByNumber() method.
+    }
 }

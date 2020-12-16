@@ -21,16 +21,9 @@ class NodeApi implements ProxyApi
     {
         $url = $this->server;
 
-        $arr = array_map(function ($item) {
-            if (is_array($item)) {
-                return json_encode($item);
-            } else {
-                return '"' . $item . '"';
-            }
-        }, $params);
-        $strParams = implode(",", $arr);
+        $strParams = json_encode(array_values($params));
         $data_string = <<<data
-{"jsonrpc":"2.0","method":"{$method}","params": [$strParams],"id":1}
+{"jsonrpc":"2.0","method":"{$method}","params": $strParams,"id":1}
 data;
 
         $data = [
@@ -67,7 +60,8 @@ data;
 
     function receiptStatus(string $txHash): bool
     {
-        // TODO: Implement receiptStatus() method.
+        $res = $this->send('eth_getTransactionReceipt', ['txHash' => $txHash]);
+        return hexdec($res['status']) ? true : false;
     }
 
     function sendRawTransaction($raw)
@@ -82,7 +76,7 @@ data;
 
     function getTransactionReceipt(string $txHash)
     {
-        // TODO: Implement getTransactionReceipt() method.
+        return $this->send('eth_getTransactionReceipt', ['txHash' => $txHash]);
     }
 
     function getNetwork(): string
@@ -93,5 +87,16 @@ data;
     function ethCall($params): string
     {
         return $this->send('eth_call', ['params' => $params, 'latest']);
+    }
+
+    function blockNumber()
+    {
+        return hexdec($this->send('eth_blockNumber'));
+    }
+
+    function getBlockByNumber(int $blockNumber)
+    {
+        $blockNumber = Utils::toHex($blockNumber, true);
+        return $this->send('eth_getBlockByNumber', ['blockNumber' => $blockNumber, true]);
     }
 }
