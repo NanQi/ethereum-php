@@ -24,4 +24,8 @@ interface ProxyApi {
     function getNonce(string $address);
 
     function ethCall($params);
+
+    function blockNumber();
+
+    function getBlockByNumber(int $blockNumber);
 }
