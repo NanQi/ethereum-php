@@ -13,15 +13,17 @@ class ERC20 extends Eth
 {
 
     protected $contractAddress;
+    protected $decimals;
 
-    function __construct(string $contractAddress, ProxyApi $proxyApi)
+    function __construct(string $contractAddress, int $decimals, ProxyApi $proxyApi)
     {
         parent::__construct($proxyApi);
 
         $this->contractAddress = $contractAddress;
+        $this->decimals = $decimals;
     }
 
-    public function balanceByApi(string $address, int $decimals)
+    public function balanceByApi(string $address)
     {
         if ($this->proxyApi instanceof EtherscanApi) {
             $res = $this->proxyApi->send('tokenbalance', [
@@ -31,7 +33,7 @@ class ERC20 extends Eth
             ]);
 
             if ($res !== false) {
-                return Utils::toDisplayAmount($res, $decimals);
+                return Utils::toDisplayAmount($res, $this->decimals);
             } else {
                 return false;
             }
@@ -41,7 +43,7 @@ class ERC20 extends Eth
         
     }
 
-    public function balance(string $address, int $decimals = 16)
+    public function balance(string $address)
     {
         $params = [];
         $params['to'] = $this->contractAddress;
@@ -53,10 +55,10 @@ class ERC20 extends Eth
         $params['data'] = "0x{$formatMethod}{$formatAddress}";
 
         $balance = $this->proxyApi->ethCall($params);
-        return Utils::toDisplayAmount($balance, $decimals);
+        return Utils::toDisplayAmount($balance, $this->decimals);
     }
 
-    public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard', int $decimals = 16)
+    public function transfer(string $privateKey, string $to, float $value, string $gasPrice = 'standard')
     {
         $from = PEMHelper::privateKeyToAddress($privateKey);
         $nonce = $this->proxyApi->getNonce($from);
@@ -72,7 +74,7 @@ class ERC20 extends Eth
             'value' => Utils::NONE,
             'chainId' => self::getChainId($this->proxyApi->getNetwork()),
         ];
-        $val = Utils::toMinUnitByDecimals("$value", $decimals);
+        $val = Utils::toMinUnitByDecimals("$value", $this->decimals);
 
         $method = 'transfer(address,uint256)';
         $formatMethod = Formatter::toMethodFormat($method);

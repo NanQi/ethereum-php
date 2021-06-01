@@ -1,7 +1,7 @@
 {
     "name": "nanqi/ethereum-php",
     "type": "library",
-    "description": "ethereum eth web3 keysotre bip44 infura etherscan proxy api",
+    "description": "ethereum eth heco erc20 trc20 web3 keysotre bip44 infura etherscan proxy api",
     "keywords": [
         "php",
         "ethereum",
@@ -9,6 +9,7 @@
         "keysotre",
         "bip44",
         "infura",
+        "heco",
         "etherscan"
     ],
     "license": "MIT",
@@ -25,7 +26,7 @@
         "ext-json": "*",
         "web3p/ethereum-tx": "^0.3.4",
         "furqansiddiqui/bip39-mnemonic-php": "^0.1.2",
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "^6.0 || ^7.0",
         "ext-bcmath": "*",
         "nanqi/minter-php-bip-44": "^1.0",
         "league/event": "^2.2"

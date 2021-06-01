@@ -14,6 +14,15 @@ class EtherscanApi implements ProxyApi {
         $this->network = $network;
     }
 
+    protected function getUrl($method)
+    {
+        $preApi = 'api';
+        if ($this->network != 'mainnet') {
+            $preApi .= '-' . $this->network;
+        }
+        return "https://$preApi.etherscan.io/api?action={$method}&apikey={$this->apiKey}";
+    }
+
     public function send($method, $params = [])
     {
         $defaultParams = [
@@ -27,12 +36,8 @@ class EtherscanApi implements ProxyApi {
             }
         }
 
-        $preApi = 'api';
-        if ($this->network != 'mainnet') {
-            $preApi .= '-' . $this->network;
-        }
 
-        $url = "https://$preApi.etherscan.io/api?action={$method}&apikey={$this->apiKey}";
+        $url = $this->getUrl($method);
         if ($params && count($params) > 0) {
             $strParams = http_build_query($params);
             $url .= "&{$strParams}";

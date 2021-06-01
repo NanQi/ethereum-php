@@ -29,13 +29,13 @@ class ERC20Test extends BaseTestCase
 
     private function getERC20($contractAddress = self::CONTRACT_ADDRESS)
     {
-        $erc20 = new ERC20($contractAddress, new EtherscanApi(self::ETHERSCAN_KEY, 'rinkeby'));
+        $erc20 = new ERC20($contractAddress, 8, new EtherscanApi(self::ETHERSCAN_KEY, 'rinkeby'));
         return $erc20;
     }
 
     public function testBalanceApi()
     {
-        $res = $this->getERC20()->balanceByApi(self::WALLET_ADDRESS, 8);
+        $res = $this->getERC20()->balanceByApi(self::WALLET_ADDRESS);
         var_dump($res);
 
         $this->assertTrue(true);
@@ -43,7 +43,7 @@ class ERC20Test extends BaseTestCase
 
     public function testBalance()
     {
-        $res = $this->getERC20()->balance(self::WALLET_ADDRESS, 8);
+        $res = $this->getERC20()->balance(self::WALLET_ADDRESS);
         var_dump($res);
 
         $this->assertTrue(true);
