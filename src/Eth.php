@@ -56,6 +56,22 @@ class Eth
             case 'kovan':
                 $chainId = 42;
                 break;
+            case 'heco-main':
+                //https://http-mainnet-node.huobichain.com
+                //https://http-mainnet-node.defibox.com
+                //https://http-mainnet.hecochain.com
+
+
+                //https://hecoinfo.com
+                $chainId = 128;
+                break;
+            case 'heco-test':
+                //https://http-testnet.hecochain.com
+                //https://testnet.hecoinfo.com
+
+                //https://scan-testnet.hecochain.com/faucet
+                $chainId = 256;
+                break;
             default:
                 break;
         }
