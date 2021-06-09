@@ -10,6 +10,10 @@ namespace Ethereum;
 class InfuraApi implements ProxyApi
 {
     protected $apiKey;
+    /**
+     * @var string
+     */
+    protected $network;
 
     function __construct(string $apiKey, string $network = 'mainnet')
     {
@@ -19,7 +23,7 @@ class InfuraApi implements ProxyApi
 
     public function send($method, $params = [])
     {
-        $url = "https://mainnet.infura.io/v3/{$this->apiKey}";
+        $url = "https://{$this->network}.infura.io/v3/{$this->apiKey}";
 
         $strParams = json_encode(array_values($params));
         $data_string = <<<data
