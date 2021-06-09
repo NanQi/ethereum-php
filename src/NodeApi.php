@@ -52,7 +52,7 @@ data;
         return $this->send('eth_gasPrice');
     }
 
-    function ethBalance(string $address, int $decimals = 16)
+    function ethBalance(string $address, int $decimals = 18)
     {
         $balance = $this->send('eth_getBalance', ['address' => $address, 'latest']);
         return Utils::toDisplayAmount($balance, $decimals);
