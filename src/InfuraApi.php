@@ -52,9 +52,19 @@ data;
         return Utils::toDisplayAmount($balance, $decimals);
     }
 
-    function receiptStatus(string $txHash): bool
+    function receiptStatus(string $txHash): ?bool
     {
-        // TODO: Implement receiptStatus() method.
+        $res = $this->send('eth_getTransactionByHash', ['txhash' => $txHash]);
+        if (!$res) {
+            return false;
+        }
+
+        if (!$res['blockNumber']) {
+            return null;
+        }
+
+        $res =  $this->getTransactionReceipt($txHash);
+        return $res['status'] === '0x1';
     }
 
     function sendRawTransaction($raw)
